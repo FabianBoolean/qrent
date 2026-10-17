@@ -1,0 +1,17 @@
+services:
+  db:
+    image: mariadb:11.8
+    container_name: qrent-db
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: ${DB_NAME}
+      MARIADB_USER: ${DB_USER}
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - qrent-db-data:/var/lib/mysql
+
+volumes:
+  qrent-db-data:
