@@ -1,4 +1,4 @@
 package at.ac.tgm.qrent.inventory;
 
-public class NamedRef {
+public record NamedRef(Long id, String name) {
 }
