@@ -1,8 +1,8 @@
 # QRent REST-API
 
-Basis-URL (lokal): `http://localhost:8080/api`
-Im Vue-Dev-Server über den Vite-Proxy einfach `/api/...` aufrufen.
-Authentifizierung: vorerst keine (kommt später).
+Basis-URL (lokal): `http://localhost:8080/api`  
+Im Vue-Dev-Server über den Vite-Proxy einfach `/api/...` aufrufen.  
+Authentifizierung: vorläufiger Mock-Login mit HTTP-Session (Spring Security folgt).
 
 ## Übersicht
 
@@ -11,6 +11,9 @@ Authentifizierung: vorerst keine (kommt später).
 | GET | `/api/categories` | Kategorien inkl. Unterkategorien | umgesetzt |
 | GET | `/api/products` | Alle Produkte (Liste) | umgesetzt |
 | GET | `/api/products/{id}` | Ein Produkt inkl. Exemplare | umgesetzt |
+| POST | `/api/auth/login` | Benutzer anmelden | umgesetzt (Mock) |
+| GET | `/api/auth/me` | Aktuell angemeldeten Benutzer abrufen | umgesetzt (Mock) |
+| POST | `/api/auth/logout` | Benutzer abmelden | umgesetzt (Mock) |
 
 ## GET /api/categories
 
@@ -67,9 +70,62 @@ Liefert alle Produkte, alphabetisch sortiert. Suche und Filter erfolgen im Front
 
 `description` und `notes` können `null` sein.
 
+## POST /api/auth/login
+
+Authentifiziert einen Benutzer über den Mock und erstellt eine HTTP-Session.
+
+**Request:**
+
+```json
+{
+  "email": "lehrer1@tgm.ac.at",
+  "password": "teacher123"
+}
+```
+
+**Response (200 OK):**
+
+```json
+{
+  "email": "lehrer1@tgm.ac.at",
+  "firstName": "Thomas",
+  "lastName": "Lehrer",
+  "schoolClass": null,
+  "role": "TEACHER"
+}
+```
+
+Die Rolle wird anhand der E-Mail-Adresse aus MariaDB ermittelt. Ohne hinterlegte Sonderrolle gilt `STUDENT`.
+
+## GET /api/auth/me
+
+Liefert den aktuell angemeldeten Benutzer anhand der HTTP-Session.
+
+**Response (200 OK):**
+
+```json
+{
+  "email": "lehrer1@tgm.ac.at",
+  "firstName": "Thomas",
+  "lastName": "Lehrer",
+  "schoolClass": null,
+  "role": "TEACHER"
+}
+```
+
+Ohne gültige Session wird `401 Unauthorized` zurückgegeben.
+
+## POST /api/auth/logout
+
+Beendet die aktuelle HTTP-Session.
+
+**Response:** `204 No Content`
+
+Nach dem Logout liefert `/api/auth/me` den Status `401 Unauthorized`.
+
 ## Fehler
 
-Format: ProblemDetail (RFC 9457).
+Format der bestehenden Inventar-API: ProblemDetail (RFC 9457).
 
 ```json
 {
@@ -80,8 +136,11 @@ Format: ProblemDetail (RFC 9457).
 }
 ```
 
+Die vorläufige Authentifizierungs-API liefert bei ungültigen Zugangsdaten derzeit eine einfache Textantwort.
+
 | Status | Bedeutung |
 |---|---|
+| 401 | Nicht angemeldet oder ungültige Zugangsdaten |
 | 404 | Ressource existiert nicht |
 | 500 | Unerwarteter Serverfehler |
 
@@ -89,4 +148,5 @@ Format: ProblemDetail (RFC 9457).
 
 - Verfügbarkeit von Exemplaren (hängt von Ausleihen/Reservierungen ab)
 - Produktfotos
-- Login, Rollen
+- Spring Security und verbindliche rollenbasierte Zugriffskontrolle
+- Schul-SSO (derzeit Mock-Authentifizierung)
