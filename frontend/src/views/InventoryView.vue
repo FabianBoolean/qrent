@@ -1,5 +1,8 @@
+﻿<script setup>
+import EquipmentListView from './EquipmentListView.vue'
+// Kompatibler Einstieg für bisherige Importe der Inventaransicht.
+</script>
+
 <template>
-  <h1>Inventar</h1>
-  <p>Platzhalter</p>
-  <p v-for="n in 50" :key="n">Testzeile {{ n }}</p>
+  <EquipmentListView />
 </template>
