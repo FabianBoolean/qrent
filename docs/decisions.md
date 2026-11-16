@@ -12,7 +12,8 @@
 | Kein Lombok | Weniger „unsichtbarer“ Code, leichter zu erklären |
 | Suche/Filter im Frontend, keine Pagination | Nur ~120 Produkte; bei Bedarf später im Backend |
 | Fehler im Format ProblemDetail (RFC 9457) | In Spring eingebaut, einheitlich |
-| Vorerst keine Authentifizierung | Bewusst verschoben, kommt als eigener Schritt |
+| Vorläufiger Mock-Login mit HTTP-Session, im Profil `prod` deaktiviert | Ermöglicht Rollen und geschützte Seiten schon jetzt; Spring Security und Schul-SSO folgen als eigener Schritt |
+| Regeln für KI-Agenten in `AGENTS.md`, `CLAUDE.md` importiert sie nur (`@AGENTS.md`) | Team nutzt Claude Code und Codex; eine einzige Quelle verhindert abweichende Regeln |
 
 ## Vorläufig (mit Betreuer abzuklären)
 
