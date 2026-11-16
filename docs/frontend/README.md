@@ -171,8 +171,8 @@ Externe, unbekannte oder öffentliche Rückkehrziele werden verworfen.
 | `/checkout`, `/return`, `/my-transactions` | Angemeldet, Platzhalter |
 | `/management/equipment`, `/management/templates` | Mindestens TEACHER, Platzhalter |
 | `/management/roles` | ADMIN, Platzhalter |
-| `/tutorials`, `/logs` | Angemeldet, bisherige Views erhalten |
-| `/verleihungen` | TEACHER oder ADMIN, bisherige View erhalten |
+| `/tutorials` | Angemeldet, bisherige View erhalten |
+| `/verleihungen`, `/logs` | TEACHER oder ADMIN, bisherige Views erhalten |
 | `/dev` | Angemeldet und nur DEV, Session-/API-Diagnose und UI-Tests |
 | `/forbidden` | Angemeldet, lokale Berechtigungsfehlerseite |
 | Unbekannte URLs | Öffentliche Nicht-gefunden-Seite |
@@ -205,8 +205,9 @@ Dashboard, Equipment, Ausleihen, Rückgabe, Tutorials, Aktuelle Verleihungen und
 „Aktuelle Verleihungen“ ersetzt den bisherigen Menüeintrag „Meine Vorgänge“ und
 verwendet die bestehende Route `/verleihungen`; `/my-transactions` bleibt direkt
 erreichbar.
-„Aktuelle Verleihungen“ ist nur für TEACHER und ADMIN sichtbar; die Route
-`/verleihungen` prüft ebenfalls diese Mindestrolle.
+„Aktuelle Verleihungen“ und „Logs“ sind nur für TEACHER und ADMIN sichtbar; die Routen
+`/verleihungen` und `/logs` prüfen ebenfalls diese Mindestrolle. Die serverseitige Absicherung
+eines künftigen Logs-Endpunkts bleibt Aufgabe des Backends.
 Das Menü „Verwaltung“ enthält für TEACHER/ADMIN Equipment und Vorlagen,
 für ADMIN zusätzlich Rollen.
 Das Menü „Mehr“ enthält die registrierte Development-Route ausschließlich im
