@@ -22,7 +22,7 @@ Die bestehende QRent-Version wird separat als Legacy-System geführt und dient a
 - JDK 25 (z. B. Eclipse Temurin)
 - Für das Frontend: Node.js
 
-## Schnellstart
+## Schnellstart vom Backend und Docker Container mit DB
 
 ```bash
 cp .env.example .env        # einmalig: lokale Konfiguration anlegen
@@ -35,6 +35,19 @@ Test: http://localhost:8080/api/categories liefert JSON.
 
 Beim ersten Start legt Flyway automatisch alle Tabellen und die Inventardaten an.
 
+## Schnellstart vom Frontend
+
+In einem **zweiten Terminal**, ausgehend vom Projektverzeichnis:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Die Oberfläche ist dann unter **http://localhost:5173** erreichbar.
+
+
 ## Projektstruktur
 
 ```
@@ -45,15 +58,7 @@ docs/      api.md (Schnittstellen), decisions.md (Entscheidungen)
 
 ## Frontend an das Backend anbinden
 
-In `frontend/vite.config.js` einen Proxy eintragen, dann im Frontend einfach `/api/...` aufrufen (kein CORS nötig):
-
-```js
-server: {
-  proxy: {
-    '/api': 'http://localhost:8080'
-  }
-}
-```
+API-Anfragen an `/api` werden vom Vite-Entwicklungsserver automatisch an das Backend unter `http://localhost:8080` weitergeleitet.
 
 ## Nützliche Befehle
 
@@ -62,6 +67,7 @@ server: {
 | `docker compose stop` | Datenbank stoppen (Daten bleiben) |
 | `docker compose down -v` | Datenbank komplett löschen (wird beim nächsten Start neu aufgebaut) |
 | `./gradlew test` | Tests ausführen (Datenbank muss laufen) |
+
 
 ## Häufige Probleme
 

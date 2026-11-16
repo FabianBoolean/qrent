@@ -1,0 +1,18 @@
+/* Globale Grundlagen; Farben und Komponentenstandards liegen im Vuetify-Theme. */
+html {
+  overflow-y: auto;
+}
+
+body {
+  margin: 0;
+}
+
+.v-application {
+  font-family: Arial, sans-serif;
+}
+
+.qrent-container {
+  width: 100%;
+  max-width: 1200px;
+  margin-inline: auto;
+}
