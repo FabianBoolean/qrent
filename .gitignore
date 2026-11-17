@@ -7,3 +7,6 @@ build/
 .env
 # Scratchbook für eigene Kommentare
 scratchbook/
+# Persönliche Claude-Code-Einstellungen
+CLAUDE.local.md
+.claude/settings.local.json
