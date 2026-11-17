@@ -28,7 +28,7 @@ const router = createRouter({
         { path: 'management/roles', name: 'role-management', component: placeholder, meta: { title: 'Rollen verwalten', requiredRole: 'ADMIN' } },
         { path: 'tutorials', name: 'tutorials', component: () => import('@/views/TutorialsView.vue') },
         { path: 'verleihungen', name: 'active-rentals', component: () => import('@/views/ActiveRentalsView.vue'), meta: { requiredRole: 'TEACHER' } },
-        { path: 'logs', name: 'logs', component: () => import('@/views/LogsView.vue') },
+        { path: 'logs', name: 'logs', component: () => import('@/views/LogsView.vue'), meta: { requiredRole: 'TEACHER' } },
         { path: 'forbidden', name: 'forbidden', component: () => import('@/views/ForbiddenView.vue') },
         ...(import.meta.env.DEV
           ? [{ path: 'dev', name: 'development', component: () => import('@/views/DevelopmentView.vue'), meta: { title: 'Entwicklung' } }]

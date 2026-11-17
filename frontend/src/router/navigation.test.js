@@ -9,9 +9,10 @@ function createNavigationRouter(development = false) {
     history: createMemoryHistory(),
     routes: [
       ...['dashboard', 'inventory', 'checkout', 'return', 'my-transactions',
-        'tutorials', 'logs', ...(development ? ['development'] : [])]
+        'tutorials', ...(development ? ['development'] : [])]
         .map((name) => ({ path: `/${name}`, name, component })),
       { path: '/verleihungen', name: 'active-rentals', component, meta: { requiredRole: 'TEACHER' } },
+      { path: '/logs', name: 'logs', component, meta: { requiredRole: 'TEACHER' } },
       ...['equipment-management', 'template-management', 'role-management']
         .map((name) => ({
           path: `/${name}`, name, component,
@@ -21,10 +22,10 @@ function createNavigationRouter(development = false) {
   })
 }
 
-test('Navigation bietet Schülern alle allgemeinen und bisherigen Bereiche, keine Verwaltung', () => {
+test('Navigation bietet Schülern die allgemeinen Bereiche, keine Logs und keine Verwaltung', () => {
   const items = getNavigationItems(createNavigationRouter(), 'STUDENT')
   assert.deepEqual(items.filter((item) => item.group === 'primary').map((item) => item.name),
-    ['dashboard', 'inventory', 'checkout', 'return', 'tutorials', 'logs'])
+    ['dashboard', 'inventory', 'checkout', 'return', 'tutorials'])
   assert.equal(items.some((item) => item.group === 'management'), false)
   assert.deepEqual(items.filter((item) => item.group === 'additional').map((item) => item.name),
     [])
@@ -40,6 +41,15 @@ test('Lehrkräfte erhalten zwei Verwaltungsziele, Admins zusätzlich Rollenverwa
   for (const role of ['TEACHER', 'ADMIN']) {
     assert.equal(getNavigationItems(router, role).some((item) => item.name === 'active-rentals'), true)
   }
+})
+
+test('Logs erscheinen nur für Lehrkräfte und Admins', () => {
+  const router = createNavigationRouter()
+  const showsLogs = (role) => getNavigationItems(router, role).some((item) => item.name === 'logs')
+  assert.equal(showsLogs('STUDENT'), false)
+  assert.equal(showsLogs('UNKNOWN'), false)
+  assert.equal(showsLogs('TEACHER'), true)
+  assert.equal(showsLogs('ADMIN'), true)
 })
 
 test('Navigation übernimmt geänderte Mindestrollen aus Router-Metadaten', () => {
