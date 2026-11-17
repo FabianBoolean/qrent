@@ -2,11 +2,9 @@
 
 ## Geltungsbereich
 
-Diese Datei liegt unter `frontend/AGENTS.md` und gilt für Arbeiten im Verzeichnis `frontend/` und dessen Unterverzeichnissen. Ergänzende Anweisungen in übergeordneten `AGENTS.md`-Dateien sind ebenfalls zu beachten.
+Diese Datei gilt für Arbeiten in `frontend/` und ergänzt die `AGENTS.md` im Repository-Root. Die allgemeinen Regeln (Projektkontext, Git, Sprache, Sicherheit, Arbeitsweise, Definition of Done) stehen dort und gelten auch hier.
 
-## Projektkontext
-
-QRent ist eine schulische Anwendung zur Verwaltung von Equipment, Reservierungen, Ausleihen, Rückgaben und Zustandsprotokollen. Das Frontend kommuniziert mit einem Spring-Boot-Backend und einer MariaDB-Datenbank. Das gesamte Repository muss bei fachlichen und technischen Entscheidungen berücksichtigt werden.
+Das Frontend kommuniziert über `/api` mit dem Spring-Boot-Backend. Fachliche und technische Entscheidungen berücksichtigen das gesamte Repository.
 
 ## Technologie und Architektur
 
@@ -15,11 +13,12 @@ QRent ist eine schulische Anwendung zur Verwaltung von Equipment, Reservierungen
 - API-Aufrufe gehören in Services, nicht direkt in Vue-Komponenten. Nutze die zentrale Axios-Konfiguration.
 - Gemeinsamen Zustand in Pinia verwalten; lokale UI-Zustände lokal belassen.
 - Nutze ein zentrales Vuetify-Theme und konsistente, responsive Layouts. Vermeide unnötige Duplikate und verstreute Designkonstanten.
-- Vor Änderungen bestehende Dateien, Routen, Abhängigkeiten und Schnittstellen untersuchen. Vorhandene Funktionen nicht unbeabsichtigt entfernen.
+- Vor Änderungen bestehende Dateien, Routen, Abhängigkeiten und Schnittstellen untersuchen.
+- Routen explizit in `src/router/index.js` pflegen (kein dateibasiertes Routing); Navigationseinträge zentral in `src/router/navigation.js`.
 
 ## Backend und Datenverträge
 
-- Bestehende Backend-Controller und DTOs sind maßgeblich. API-Endpunkte, Antwortfelder und Berechtigungen nicht erfinden.
+- Bestehende Backend-Controller und DTOs sowie `docs/api.md` sind maßgeblich. API-Endpunkte, Antwortfelder und Berechtigungen nicht erfinden.
 - Für Equipment sind derzeit `GET /api/categories`, `GET /api/products` und `GET /api/products/{id}` vorgesehen; die tatsächlichen Response-Formate im Backend prüfen.
 - Die aktuelle Entwicklungsanmeldung verwendet `POST /api/auth/login` mit `email` und `password`, `GET /api/auth/me` sowie `POST /api/auth/logout` und eine serverseitige HTTP-Session. Die Authentifizierung so kapseln, dass später Schul-SSO integriert werden kann.
 - Die tatsächliche Benutzerrolle kommt vom Backend (`STUDENT`, `TEACHER`, `ADMIN`). Frontend-Rollenprüfungen dienen nur der Darstellung; die Autorisierung bleibt Aufgabe des Backends.
@@ -37,26 +36,30 @@ QRent ist eine schulische Anwendung zur Verwaltung von Equipment, Reservierungen
 
 ## Sicherheit und Entwicklungsfunktionen
 
-- Keine Passwörter, Tokens oder Geheimnisse im Quellcode, in Logs oder im Browser-Local-Storage speichern.
+- Keine Passwörter, Tokens oder Geheimnisse im Browser-Local-Storage oder Session-Storage speichern.
 - Session-Cookies durch den Browser verwalten lassen; Axios für Cookie-basierte Requests passend konfigurieren.
-- Development-Views und UI-Rollensimulationen nur in der Entwicklungsumgebung bereitstellen; sie dürfen echte Rollen, Router-Berechtigungen oder Backend-Autorisierung nicht verändern.
-- Keine unnötigen externen Abhängigkeiten einführen. Neue Pakete und ihre Gründe transparent nennen.
+- Development-Views und UI-Rollensimulationen nur in der Entwicklungsumgebung bereitstellen; sie dürfen echte Rollen, Router-Berechtigungen oder Backend-Autorisierung nicht verändern. Der Produktions-Build darf sie nicht enthalten.
 
 ## Verbindliche Code-Dokumentation
 
-- Kommentare und Entwicklerdokumentation auf **Deutsch** verfassen; technische Namen und API-Felder unverändert lassen.
 - Für exportierte Funktionen, Services, Stores und komplexere Methoden aussagekräftiges **JSDoc** verwenden: Zweck, Parameter, Rückgabewert, Fehler und wichtige Nebenwirkungen, soweit relevant.
 - Vue-Komponenten bei Bedarf mit Zweck, Props, Emits, Slots und relevanten Store-/Service-Abhängigkeiten dokumentieren.
 - Nicht offensichtliche Entscheidungen und sicherheitsrelevantes Verhalten erläutern. Keine Kommentare, die lediglich die nächste Codezeile wiederholen.
 - Bei jeder wesentlichen Änderung `docs/frontend/README.md` (vom Repository-Root aus) beziehungsweise die tatsächlich vorhandene Frontend-Dokumentation aktualisieren.
-- Dokumentation darf nur tatsächlich implementierte Funktionen als funktionsfähig beschreiben. Veraltete Kommentare entfernen.
-- **Definition of Done:** Code ist implementiert, angemessen dokumentiert, getestet und die betroffene Entwicklerdokumentation aktualisiert.
+- Veraltete Kommentare entfernen.
 
-## Arbeitsweise und Qualitätssicherung
+## Tests und Qualitätsprüfung
 
-1. Vor jeder größeren Aufgabe den Ist-Zustand und die betroffenen Dateien prüfen.
-2. Einen kurzen Umsetzungsplan nennen und Änderungen in nachvollziehbaren Schritten durchführen.
-3. Bestehende Konventionen beachten und nur aufgabenbezogene Dateien ändern.
-4. Nach Änderungen passende Tests, Linting und/oder `npm run build` ausführen, soweit verfügbar; fehlgeschlagene oder nicht ausführbare Prüfungen offen benennen.
-5. Am Ende geänderte Dateien, umgesetzte Funktionen, Tests und offene Punkte zusammenfassen.
-6. Keine Git-Commits, Pushes, Branch-Merges, destruktiven Löschaktionen oder Änderungen an produktiven Daten ohne ausdrückliche Aufforderung.
+- Tests verwenden den eingebauten Node-Test-Runner (`node --test`), ohne zusätzliche Testbibliothek. Testdateien liegen neben dem Code als `*.test.js`.
+- Neue Logik in Services, Stores, Router und Utils bekommt Tests.
+- Code-Stil: Prettier (`.prettierrc.json`) und `.editorconfig` – 2 Leerzeichen, keine Semikolons, einfache Anführungszeichen, max. 100 Zeichen pro Zeile.
+
+Im Verzeichnis `frontend/`:
+
+| Zweck | Befehl |
+|---|---|
+| Tests | `node --test "src/**/*.test.js"` (Anführungszeichen nötig, damit Node das Muster auflöst) |
+| Linting (nur prüfen) | `npx eslint .` und `npx oxlint .` |
+| Build | `npm run build` |
+
+**Achtung:** `npm run lint` und `npm run format` verändern Dateien (`--fix` bzw. `--write`). Zum reinen Prüfen die Befehle aus der Tabelle verwenden; automatische Korrekturen nur auf aufgabenbezogene Dateien anwenden.
