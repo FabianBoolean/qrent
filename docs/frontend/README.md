@@ -52,6 +52,8 @@ npm run preview
 - `src/components/equipment/`: Filtereingaben, Produkttabelle und Produktkarte.
 - `src/services/equipmentService.js`: bestehende Inventar-Endpunkte.
 - `src/utils/equipmentFilters.js`: lokale Such- und Filterlogik.
+- `src/utils/inventoryNumber.js`: gemeinsame Regeln für Inventarnummern (Prüfung, Schreibweise).
+- `src/components/qrcode/QrLabel.vue`: QR-Etikett mit Logo, QR-Code, Inventarnummer und PNG-Download.
 - `src/views/DevelopmentView.vue`: Diagnose und isolierte UI-Vorschau, nur im DEV-Modus.
 - `src/dev/useDevelopmentTools.js`: lokaler Vorschauzustand und lesender Session-Test.
 - `src/components/layout/AppHeader.vue`: Benutzeranzeige, Benutzermenü und mobiler Drawer.
@@ -352,6 +354,21 @@ Ein Produkt ohne Exemplare erhält ebenfalls einen erklärenden Leerzustand.
 `itemCount` bedeutet Gesamtbestand, nicht verfügbare Exemplare. Beide Ansichten
 weisen darauf hin, dass keine Verfügbarkeitsinformationen vorliegen. Es gibt keine
 erfundenen Bilder, Verfügbarkeitsanzeigen oder Ausleihaktionen.
+
+## QR-Etiketten
+
+`QrLabel.vue` erzeugt im Browser ein Etikett mit QRent-Logo, QR-Code und der
+Inventarnummer in zwei Vierergruppen (`0101 0002`) und bietet es als
+`qrent-<Inventarnummer>.png` zum Download an. Es gibt keinen Backend-Aufruf.
+Verwendet wird das Paket `qrcode`.
+
+- Der QR-Code enthält vorläufig nur die 8-stellige Inventarnummer.
+- Fehlerkorrektur H und eine Ruhezone von 4 Modulen halten das Etikett auch
+  bei Beschädigung lesbar.
+- Das Logo steht über dem QR-Code und nicht in dessen Mitte: Das breite Logo
+  wäre dort zu klein, und seine Eckquadrate könnten den Scanner stören.
+- Die Komponente ist derzeit nur auf `/dev` im Bereich „QR-Etikett erzeugen“
+  eingebunden und daher nicht im Produktions-Build enthalten.
 
 ## Development-Seite
 
