@@ -1,10 +1,12 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore.js'
 import { useNotificationStore } from '@/stores/notificationStore.js'
 import { useDevelopmentTools } from '@/dev/useDevelopmentTools.js'
 import TransactionOverview from '@/components/common/TransactionOverview.vue'
+import QrLabel from '@/components/qrcode/QrLabel.vue'
+import { normalizeInventoryNumber } from '@/utils/inventoryNumber.js'
 
 const auth = useAuthStore()
 const notifications = useNotificationStore()
@@ -20,6 +22,13 @@ const roles = [
 ]
 const userJson = computed(() => JSON.stringify(auth.user, null, 2))
 const responseJson = computed(() => JSON.stringify(apiResult.value?.data, null, 2))
+
+// QR-Etikett testen: Eingabe im Feld, gültige Nummer oder null für die Vorschau.
+const labelInput = ref('01010002')
+const labelNumber = computed(() => normalizeInventoryNumber(labelInput.value))
+const labelRules = [
+  (value) => !!normalizeInventoryNumber(value) || 'Die Inventarnummer hat 8 Ziffern.',
+]
 
 /** Stellt drei Meldungen an; die unmittelbar doppelte erste Meldung wird unterdrückt. */
 function testQueue() {
@@ -128,6 +137,23 @@ function testAction() {
               <TransactionOverview title="Alle Reservierungen und Ausleihen" description="Vorschau des schulweiten Dashboard-Bereichs." icon="mdi-account-group-outline" />
             </v-col>
           </v-row>
+        </v-card-text>
+      </v-card>
+    </v-col>
+
+    <v-col cols="12" lg="6">
+      <v-card variant="outlined">
+        <v-card-text>
+          <h2 class="text-h6 mb-3">QR-Etikett erzeugen</h2>
+          <v-text-field
+            v-model="labelInput"
+            :rules="labelRules"
+            label="Inventarnummer"
+            hint="8 Ziffern, Leerzeichen sind erlaubt"
+            persistent-hint
+            class="mb-4"
+          />
+          <QrLabel v-if="labelNumber" :inventory-number="labelNumber" />
         </v-card-text>
       </v-card>
     </v-col>

@@ -20,6 +20,7 @@
 - Inventarnummer-Format: 8-stellig nach Norberts Liste (Kategorie 2 + Unterkategorie 2 + laufende Nummer 4)
 - Inventardaten (V2) stammen aus einer älteren Liste; 23 Unterkategorie-Namen sind abgeleitet
 - Wird ein Exemplar oder ein Produkt reserviert?
+- QR-Code-Inhalt: vorläufig nur die Inventarnummer; ob eine URL gespeichert wird, muss vor dem Druck echter Etiketten feststehen
 
 ## Bekannte offene Punkte
 
